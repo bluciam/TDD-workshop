@@ -99,7 +99,8 @@ With this, the testing infrastructure is set up.
 
 [RSpec](http://www.rubydoc.info/github/rspec/rspec-core/frames) uses mainly the words "describe" and "it" so we can express concepts like a conversation:
 
-> "Describe an order." "It sums the prices of its line items."
+> "Describe an order."
+> "It sums the prices of its line items."
 
 The `describe` method creates an `ExampleGroup`. Within the block passed to `describe` you can declare examples using the `it` method. Under the hood, an example group is a class in which the block passed to `describe` is evaluated. The broad syntax of the test is as follows:
 
@@ -126,10 +127,10 @@ from the root directory of the app. If used alone, it will run all the tests fou
 
 ```
 controllers/  factories/       models/         requests/       support/
-helpers/      rails\_helper.rb  spec\_helper.rb  views/
+helpers/      rails_helper.rb  spec_helper.rb  views/
 ```
 
-Next is what to test: unit testing, integrations testing, views, regression testing.
+Next is what to test: unit testing, integrations testing, feature testing, regression testing.
 
 ## Unit testing: Models
 
@@ -141,35 +142,8 @@ The blog [Everyday Rails](http://everydayrails.com/2012/03/19/testing-series-rsp
 *   data validation
 *   class and instance method
 
-Full text deployed in a post called _[Testing with RSpec in Rails, Part 2, Models](https://superspreadsheet.wordpress.com/2015/01/27/testing-with-rspec-in-rails-part-2-models/ "Testing with RSpec in Rails, Part 2, Models")_.
 
-## Unit testing: Controllers
-
-Post in development.
-
-## Integration tests
-
-Post in conception. This should test the functionality across models, views and controllers.
-
-## View's tests?
-
-Will I create a post? Code in the views tend to change often, so there are different schools of thought on whether to test or not.
-
-## Regression tests
-
-# Automatic test runs with Guard
-
-`Guard` runs the test suite upon the detection of a modification of file in the spec directory or as specified in the `Guardfile`. It also sets the testing environment just once, speeding up the running of subsequent tests. To set up (gem already included in the Gemfile) run:
-
-bundle exec guard init
-
-which creates the `Guardfile` describing how and when Guard is to run. In his tutorial, [Guard: Michael Hartl's Rails tutorial](https://www.railstutorial.org/book/static_pages#sec-guard "Guard: Michael Hartl's Rails tutorial"), he explains the set up in more detail, although using `minitest` instead of `RSpec`. To start guard just type in a terminal
-
-```
-guard
-```
-
-It will create a shell and `guard` will start listening to any changes in the spec directory or any other file specified in the `Guardfile`. The `Guarfile` created in the set up is a very good starting point. Type enter in the shell to run all the tests in the spec directory. `Ctl-D` to exit. (Explanation on `Guard` needs expansion.) _(Edited 26 February 2015, added information about accessing database details.)_ Following from the post [Testing with RSpec in Rails, Part 1, Introduction](https://superspreadsheet.wordpress.com/2015/01/22/testing-with-rspec-in-rails/ "Testing with RSpec in Rails, Part 1, Introduction"), it is now time to expand on testing models based on my experience. I considered three types of test relevant for my application:
+We can consider three types of test relevant for this workshop:
 
 *   Factory tests
 *   Data fields validations
@@ -181,7 +155,10 @@ The first test is to make sure that a valid record can be created safely and res
 
 > A factory is an object for creating other objects – formally a factory is simply an object that returns an object from some method call, which is assumed to be "new". [https://en.wikipedia.org/wiki/Factory_%28object-oriented\_programming%29#cite\_ref-1](https://en.wikipedia.org/wiki/Factory_%28object-oriented_programming%29#cite_ref-1 "Factory definition, wikipedia")
 
-In my opinion, this is not a TDD type test, rather, it follows the database design. Therefore, the table might exist already. This is what I am assuming for the rest of this post. If the table exists, we need tools to find the table structure in the development database. There are two easy ways that I know of using the rails command. The first is using the console
+This is probably not technically TTD, rather, it follows the database design. Therefore, the table might exist already.
+If the table exists, we need tools to find the table structure in the development database. There are two easy ways that I know of using the rails command.
+
+The first is using the console
 
 ```
 rails c # short for rails console
@@ -193,7 +170,7 @@ The command
 $ rails c
 Loading development environment (Rails 4.0.4)
 2.0.0-p451 :001 > ActiveRecord::Base.connection.tables
- =\> \["schema_migrations", "users", ...\]
+ => ["schema_migrations", "users", ...]
 ```
 
 will output an array including all of the current tables. And the command `User.column_names`
