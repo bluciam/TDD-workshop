@@ -20,7 +20,7 @@ cd railsbridge-montreal-website
 bundle install
 ```
 
-# Get started
+# About Testing
 
 Testing in Rails is both hard and easy. Hard because it takes as much time as coding does, but easy because there are many tools that make the most complicated things straightforward. There are so many tools though, that sometimes it is hard to choose. Neat paradox. When setting up testing for my app, I did not find in one place a comprehensive explanation of the Rails testing process as a whole. This is an attempt to fix the situation.
 
@@ -30,21 +30,25 @@ The issue is more what and when to test. Michael Hartl has an introduction to te
 
 *   first test the controllers and the models, in other words `unit testing`;
 *   second test the functionality across models, views and controllers, the `integration tests`;
-*   and third, the views, but if they are likely to change, they can be skipped.
+*   and third, the views, also known as `feature tests`, they are likely to change and more complex so this is something to weight in when implemeting them.
 
-He also mentions the importance of writing `regression tests` on bugs found and having tests in place before any refactoring.
+The `regression tests` on bugs are also very important, and specially having tests in place before any refactoring.
 
 # RSpec testing infrastructure
 
 ## Set up
 
-When a new Rails project is created with default settings, a `test` directory is created, coupled to work with `minitest`. From the word GO, I started using `RSpec` ([http://rspec.info/](http://rspec.info/ "RSpec home page"), since I used the _Ruby on Rails tutorial_ mentioned above which used `RSpec` as testing framework. I believed it has changed since. I did not want that default directory, as I wanted the RSpec set up. By issuing the command
+When a new Rails project is created with default settings, a `test` directory is created, coupled to work with `minitest`. 
+In this workshop we will be using RSpec, `RSpec` ([http://rspec.info/](http://rspec.info/ "RSpec home page"),
+so we are changing the default as follows:
 
 ```
 rails g controller StaticPages about --no-test-framework
+```
 
-the test files related to the `StaticPages controller` will not be created. To create the right files, RSpec must be installed. That is done by including its gem in the Gemfile. `RSpec` takes advantage of a series of helpers to run tests automatically. The gems are specified following:
+The test files related to the `StaticPages controller` will not be created. To create the right files, RSpec must be installed. That is done by including its gem in the Gemfile. `RSpec` takes advantage of a series of helpers to run tests automatically. The gems are specified following:
 
+```
 group :development, :test do
   gem 'rspec-rails'
   gem 'factory\_bot\_rails'
@@ -57,10 +61,9 @@ group :test do
   gem 'guard-rspec'
   gem 'launchy'
 end
-
 ```
 
-and then run bundle. In my opinion, the most interesting about Rails testing, is the interaction with databases and `RSpec` plus helpers makes this easy.
+And then run bundle. One of the most interesting about Rails testing, is the interaction with databases and `RSpec` helpers makes this easy.
 
 > By default, every Rails application has three environments: development, test, and production. The database for each one of them is configured in `config/database.yml`. [http://guides.rubyonrails.org/testing.html](http://guides.rubyonrails.org/testing.html "Ruby on Rails guides")
 
