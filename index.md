@@ -20,16 +20,14 @@ cd railsbridge-montreal-website
 bundle install
 ```
 
-# About Testing
-
-Testing in Rails is both hard and easy. Hard because it takes as much time as coding does, but easy because there are many tools that make the most complicated things straightforward. There are so many tools though, that sometimes it is hard to choose. Neat paradox. When setting up testing for my app, I did not find in one place a comprehensive explanation of the Rails testing process as a whole. This is an attempt to fix the situation.
-
 # Why testing?
 
-The issue is more what and when to test. Michael Hartl has an introduction to testing in his [Ruby on Rails tutorial](https://www.railstutorial.org/book/static_pages#sec-getting_started_with_testing "Ruby on Rails tutorial"), which describes why testing and the kinds of tests he is likely to do. In summary,
+Testing in Rails is both hard and easy. Hard because it takes as much time as coding does, but easy because there are many tools that make the most complicated things straightforward. There are so many tools though, that sometimes it is hard to choose. Neat paradox.
 
-*   first test the controllers and the models, in other words `unit testing`;
-*   second test the functionality across models, views and controllers, the `integration tests`;
+The next issue is what and when to test. Michael Hartl has an introduction to testing in his [Ruby on Rails tutorial](https://www.railstutorial.org/book/static_pages#sec-getting_started_with_testing "Ruby on Rails tutorial"), which describes why testing and the kinds of tests he is likely to do. In summary,
+
+*   first, test the controllers and the models, in other words `unit testing`;
+*   second, test the functionality across models, views and controllers, the `integration tests`;
 *   and third, the views, also known as `feature tests`, they are likely to change and more complex so this is something to weight in when implemeting them.
 
 The `regression tests` on bugs are also very important, and specially having tests in place before any refactoring.
@@ -39,7 +37,7 @@ The `regression tests` on bugs are also very important, and specially having tes
 ## Set up
 
 When a new Rails project is created with default settings, a `test` directory is created, coupled to work with `minitest`.
-In this workshop we will be using RSpec, `RSpec` ([http://rspec.info/](http://rspec.info/ "RSpec home page"),
+In this workshop we will be using RSpec, `RSpec` ([http://rspec.info/](http://rspec.info/ "RSpec home page")),
 so we are changing the default as follows:
 
 ```bash
@@ -51,14 +49,13 @@ The test files related to the `StaticPages controller` will not be created. To c
 ```ruby
 group :development, :test do
   gem 'rspec-rails'
-  gem 'factory\_bot\_rails'
+  gem 'factory_bot_rails'
 end
 
 group :test do
   gem 'selenium-webdriver'
   gem 'faker'
   gem 'capybara'
-  gem 'guard-rspec'
   gem 'launchy'
 end
 ```
