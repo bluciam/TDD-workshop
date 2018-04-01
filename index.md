@@ -6,14 +6,19 @@ We will start with an already existing application just to get started and learn
 
 # Install rvm
 
-[https://rvm.io/](https://rvm.io/)
-\\curl -sSL https://get.rvm.io | bash -s stable
+```
+\curl -sSL https://get.rvm.io | bash -s stable
+```
 
 **RVM** is a Ruby version manager. There are many others, like **rbenv** and **asdf**. It is useful when you have multiple Ruby applications on your computer, using different ruby versions. You don't have to install **RVM** if you already have a version manager.
 
 # Clone one of the repos at:
 
-git clone -b tdd-workshop https://github.com/bluciam/railsbridge-montreal-website.git cd railsbridge-montreal-website bundle install
+```
+git clone -b tdd-workshop https://github.com/bluciam/railsbridge-montreal-website.git
+cd railsbridge-montreal-website
+bundle install
+```
 
 # Get started
 
@@ -35,6 +40,7 @@ He also mentions the importance of writing `regression tests` on bugs found and 
 
 When a new Rails project is created with default settings, a `test` directory is created, coupled to work with `minitest`. From the word GO, I started using `RSpec` ([http://rspec.info/](http://rspec.info/ "RSpec home page"), since I used the _Ruby on Rails tutorial_ mentioned above which used `RSpec` as testing framework. I believed it has changed since. I did not want that default directory, as I wanted the RSpec set up. By issuing the command
 
+```
 rails g controller StaticPages about --no-test-framework
 
 the test files related to the `StaticPages controller` will not be created. To create the right files, RSpec must be installed. That is done by including its gem in the Gemfile. `RSpec` takes advantage of a series of helpers to run tests automatically. The gems are specified following:
@@ -52,27 +58,37 @@ group :test do
   gem 'launchy'
 end
 
+```
+
 and then run bundle. In my opinion, the most interesting about Rails testing, is the interaction with databases and `RSpec` plus helpers makes this easy.
 
 > By default, every Rails application has three environments: development, test, and production. The database for each one of them is configured in `config/database.yml`. [http://guides.rubyonrails.org/testing.html](http://guides.rubyonrails.org/testing.html "Ruby on Rails guides")
 
 That fact is simply brilliant, as the development database is NOT the same as the test database. One can create automatically hundreds of records to test for specific features in isolation. To run any testing, the databases need to be created, so run
 
+```
 rake db:create:all
+```
 
 which will create the databases which do not exist and inform you of the ones already created. The information on the databases description is taken from the file `config/database.yml`, which should include the information about test, development and production databases. Make sure that the three are name differently! Then run
 
+```
 rails generate rspec:install
+```
 
 which generates the following configuration files:
 
+```
 .rspec
 spec/spec_helper.rb
 spec/rails_helper.rb
+```
 
 All tests and helpers will reside in the `spec directory`. This is directory where `RSpec` searches for the tests to run. NOTE: After making changes to any of the models in development, you have to migrate the changes to the test database as well by running
 
+```
 rake db:migrate RAILS_ENV=test
+```
 
 With this, the testing infrastructure is set up.
 
@@ -84,24 +100,31 @@ With this, the testing infrastructure is set up.
 
 The `describe` method creates an `ExampleGroup`. Within the block passed to `describe` you can declare examples using the `it` method. Under the hood, an example group is a class in which the block passed to `describe` is evaluated. The broad syntax of the test is as follows:
 
+```
 describe _Object_ do
   it "Descriptive message of the test" do
     _code with expectations_
   end
 end
 
-Each "it" line only expects one example. Best practice is to test one thing at a time to make it simple to find errors. Although the descriptive message is technically optional, omitting defeat the purpose of individual testing. Previous `RSpec` examples had the "should" beginning the message, however that just clutters the output. A direct verb suffices.
+```
+
+Each `it` line only expects one example. Best practice is to test one thing at a time to make it simple to find errors. Although the descriptive message is technically optional, omitting defeat the purpose of individual testing. Previous `RSpec` examples had the "should" beginning the message, however that just clutters the output. A direct verb suffices.
 
 ## Actual testing
 
 Now to writing the tests. But where to start? With how to run a test. To run a test, use the command
 
+```
 rspec
+```
 
 from the root directory of the app. If used alone, it will run all the tests found in the `spec` directory. You can also specify a directory or a filename including its path with respect to root. RSpec will run all tests found in that directory in the first case, or just the file specified in the second. The testing framework automatically creates directories to sort out the tests. My `spec` directory looks like this:
 
+```
 controllers/  factories/       models/         requests/       support/
 helpers/      rails\_helper.rb  spec\_helper.rb  views/
+```
 
 Next is what to test: unit testing, integrations testing, views, regression testing.
 
@@ -139,7 +162,9 @@ bundle exec guard init
 
 which creates the `Guardfile` describing how and when Guard is to run. In his tutorial, [Guard: Michael Hartl's Rails tutorial](https://www.railstutorial.org/book/static_pages#sec-guard "Guard: Michael Hartl's Rails tutorial"), he explains the set up in more detail, although using `minitest` instead of `RSpec`. To start guard just type in a terminal
 
-$ guard
+```
+guard
+```
 
 It will create a shell and `guard` will start listening to any changes in the spec directory or any other file specified in the `Guardfile`. The `Guarfile` created in the set up is a very good starting point. Type enter in the shell to run all the tests in the spec directory. `Ctl-D` to exit. (Explanation on `Guard` needs expansion.) _(Edited 26 February 2015, added information about accessing database details.)_ Following from the post [Testing with RSpec in Rails, Part 1, Introduction](https://superspreadsheet.wordpress.com/2015/01/22/testing-with-rspec-in-rails/ "Testing with RSpec in Rails, Part 1, Introduction"), it is now time to expand on testing models based on my experience. I considered three types of test relevant for my application:
 
@@ -155,34 +180,35 @@ The first test is to make sure that a valid record can be created safely and res
 
 In my opinion, this is not a TDD type test, rather, it follows the database design. Therefore, the table might exist already. This is what I am assuming for the rest of this post. If the table exists, we need tools to find the table structure in the development database. There are two easy ways that I know of using the rails command. The first is using the console
 
-rails c
-
-short for
-
-rails console
+```
+rails c # short for rails console
+```
 
 The command
 
+```
 $ rails c
 Loading development environment (Rails 4.0.4)
 2.0.0-p451 :001 > ActiveRecord::Base.connection.tables
  =\> \["schema_migrations", "users", ...\]
+```
 
 will output an array including all of the current tables. And the command `User.column_names`
 
+```
 2.0.0-p451 :008 > User.column_names
  =\> \["id", "name", "email", ...\]
+```
 
 will output an array including the column names of the table User. The second way of accessing this information is by using the command
 
-rails db
-
-short for
-
-rails dbconsole
+```
+rails db # short for rails dbconsole
+```
 
 It starts a console for the database and database adapter specified in `config/database.yml` depending on the current Rails environment. If testing, one is most likely in the development environment.
 
+```
 $ rails db
 Password:
 psql (9.4.1, server 9.3.5)
@@ -190,12 +216,17 @@ Type "help" for help.
 
 App\_Name\_development=#
 
+```
+
 To retrieve the fields of the _articles_ table, I used the following command:
 
+```
 =# select column\_name from information\_schema.columns where table_name='articles';
+```
 
 The output is:
 
+```
  column_name
 \-\-\-\-\-\-\-\-\-\-\-\-\-
  id
@@ -206,13 +237,16 @@ The output is:
  updated_at
 (6 rows)
 
+```
+
 The command
 
 App\_Name\_developemnt=# \\d
 
 will display a list of all the relations. With this information and with the information in the `model.rb` file, the factory can be written for the model. I used the `faker` gem to create random names and descriptions ([https://github.com/stympy/faker](https://github.com/stympy/faker "The Faker gem, github")). Given that _authors_ write _articles_, I also have a factory for articles. The factories look like this:
 
-\# spec/factories.rb
+```Ruby
+# spec/factories.rb
 require 'faker'
 
 FactoryGirl.define do
@@ -230,6 +264,8 @@ FactoryGirl.define do
     summary { Faker::Lorem.sentence }
   end
 end
+
+```
 
 The `image` field has been created with the `carrierwave` gem and that is the code needed in the testing environment. The file `image_2.jpg` must exist in the `spec/support/images/` directory. I did not know what was best practice between having one file called `spec/factories.rb` or having a file `model_name.rb` in the `spec/factories` directory. My searches did not deliver any conclusive results. So I used trial and error. I first opted for one file, then a mix, and then multiple files in the directory, as the number of factories grew, one per model. This is in-line with Rails practice of always having small files. The actual test to validate the factory is written in file `spec/models/article_spec.rb`:
 
