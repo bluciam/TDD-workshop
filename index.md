@@ -1,27 +1,25 @@
-# TDD Workshop
-
-## Goal
+# Goal
 
 In this workshop, we'll help you make your first steps with Test Driven Development in Rails, using RSpec. RSpec is a widely used testing framework that can be used un pure ruby and also have helpers for Rails and other web developement frameworks.
 
 We will start with an already existing application just to get started and learn about how to write a test, the different types of tests, good practices. Then, once we added some different tests, we'll develop a new feature using Test Driven Development.
 
-## Install rvm
+# Install rvm
 
 [https://rvm.io/](https://rvm.io/)
 \\curl -sSL https://get.rvm.io | bash -s stable
 
 **RVM** is a Ruby version manager. There are many others, like **rbenv** and **asdf**. It is useful when you have multiple Ruby applications on your computer, using different ruby versions. You don't have to install **RVM** if you already have a version manager.
 
-## Clone one of the repos at:
+# Clone one of the repos at:
 
 git clone -b tdd-workshop https://github.com/bluciam/railsbridge-montreal-website.git cd railsbridge-montreal-website bundle install
 
-## Get started
+# Get started
 
 Testing in Rails is both hard and easy. Hard because it takes as much time as coding does, but easy because there are many tools that make the most complicated things straightforward. There are so many tools though, that sometimes it is hard to choose. Neat paradox. When setting up testing for my app, I did not find in one place a comprehensive explanation of the Rails testing process as a whole. This is an attempt to fix the situation.
 
-## Why testing?
+# Why testing?
 
 The issue is more what and when to test. Michael Hartl has an introduction to testing in his [Ruby on Rails tutorial](https://www.railstutorial.org/book/static_pages#sec-getting_started_with_testing "Ruby on Rails tutorial"), which describes why testing and the kinds of tests he is likely to do. In summary,
 
@@ -31,9 +29,9 @@ The issue is more what and when to test. Michael Hartl has an introduction to te
 
 He also mentions the importance of writing `regression tests` on bugs found and having tests in place before any refactoring.
 
-## RSpec testing infrastructure
+# RSpec testing infrastructure
 
-### Set up
+## Set up
 
 When a new Rails project is created with default settings, a `test` directory is created, coupled to work with `minitest`. From the word GO, I started using `RSpec` ([http://rspec.info/](http://rspec.info/ "RSpec home page"), since I used the _Ruby on Rails tutorial_ mentioned above which used `RSpec` as testing framework. I believed it has changed since. I did not want that default directory, as I wanted the RSpec set up. By issuing the command
 
@@ -78,7 +76,7 @@ rake db:migrate RAILS_ENV=test
 
 With this, the testing infrastructure is set up.
 
-### Syntax
+## Syntax
 
 [RSpec](http://www.rubydoc.info/github/rspec/rspec-core/frames) uses mainly the words "describe" and "it" so we can express concepts like a conversation:
 
@@ -94,7 +92,7 @@ end
 
 Each "it" line only expects one example. Best practice is to test one thing at a time to make it simple to find errors. Although the descriptive message is technically optional, omitting defeat the purpose of individual testing. Previous `RSpec` examples had the "should" beginning the message, however that just clutters the output. A direct verb suffices.
 
-### Actual testing
+## Actual testing
 
 Now to writing the tests. But where to start? With how to run a test. To run a test, use the command
 
@@ -107,7 +105,7 @@ helpers/      rails\_helper.rb  spec\_helper.rb  views/
 
 Next is what to test: unit testing, integrations testing, views, regression testing.
 
-### Unit testing: Models
+## Unit testing: Models
 
 > Models are the building blocks of the application. They are also easier to test since their behaviour should be well defined in any application. I considered them to be first priority to test. [Everyday Rails](http://everydayrails.com/2012/03/19/testing-series-rspec-models-factory-girl.html "Blog Everyday Rails")
 
@@ -119,21 +117,21 @@ The blog [Everyday Rails](http://everydayrails.com/2012/03/19/testing-series-rsp
 
 Full text deployed in a post called _[Testing with RSpec in Rails, Part 2, Models](https://superspreadsheet.wordpress.com/2015/01/27/testing-with-rspec-in-rails-part-2-models/ "Testing with RSpec in Rails, Part 2, Models")_.
 
-### Unit testing: Controllers
+## Unit testing: Controllers
 
 Post in development.
 
-### Integration tests
+## Integration tests
 
 Post in conception. This should test the functionality across models, views and controllers.
 
-### View's tests?
+## View's tests?
 
 Will I create a post? Code in the views tend to change often, so there are different schools of thought on whether to test or not.
 
-### Regression tests
+## Regression tests
 
-## Automatic test runs with Guard
+# Automatic test runs with Guard
 
 `Guard` runs the test suite upon the detection of a modification of file in the spec directory or as specified in the `Guardfile`. It also sets the testing environment just once, speeding up the running of subsequent tests. To set up (gem already included in the Gemfile) run:
 
@@ -149,7 +147,7 @@ It will create a shell and `guard` will start listening to any changes in the sp
 *   Data fields validations
 *   Associations between models
 
-## Factory test
+# Factory test
 
 The first test is to make sure that a valid record can be created safely and respecting all of the constraints. In other words, that is has a valid _factory_.
 
@@ -246,7 +244,7 @@ end
 
 The RSpec matcher `be_valid` verifies that our factory does indeed return a valid object. Given that I had already created my models, once the test was passing, I changed the code to see the test fail, making sure that specific parts of code were indeed being tested.
 
-## Data validations
+# Data validations
 
 These tests are straight-forward, validating any of the constraints needed in each field. The model of the article has the constraint that the title is mandatory, as shown below:
 
@@ -269,7 +267,7 @@ end
 
 Notice in the `article_spec.rb` file there are two special methods: `create` and `build`. `create` builds and saves the object, while `build` only does that. This allows the modification of attributes before saving the object. The `not_to` verifies that an empty title should not be allowed in a valid object.
 
-## Associations between models
+# Associations between models
 
 An interesting test that I discovered in this [post](http://liahhansen.com/2011/04/14/testing-model-associations-in-rspec.html "Testing associations in RSpec"), is testing the associations between models using RSpec. As a beginner, I always want to double check that I made the right associations. For this, I used the gem `shoulda` found in [github](https://github.com/thoughtbot/shoulda "shoulda gem"). Add the gem to the Gemfile:
 
