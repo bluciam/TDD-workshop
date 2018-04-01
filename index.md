@@ -198,7 +198,7 @@ App\_Name\_development=#
 
 ```
 
-To retrieve the fields of the _articles_ table, I used the following command:
+To retrieve the fields of the _articles_ table, issue the following command:
 
 ```bash
 =# select column\_name from information\_schema.columns where table_name='articles';
@@ -225,7 +225,10 @@ The command
 App_Name_developemnt=# \d
 ```
 
-will display a list of all the relations. With this information and with the information in the `model.rb` file, the factory can be written for the model. I used the `faker` gem to create random names and descriptions ([https://github.com/stympy/faker](https://github.com/stympy/faker "The Faker gem, github")). Given that _authors_ write _articles_, I also have a factory for articles. The factories look like this:
+will display a list of all the relations. With this information and with the information in the `model.rb` file, the factory can be written for the model. The `faker` gem creates random names and descriptions ([https://github.com/stympy/faker](https://github.com/stympy/faker "The Faker gem, github")). Given that _authors_ write _articles_, a factory for articles is also included.
+
+
+The factories look like this:
 
 ```ruby
 # spec/factories.rb
@@ -249,7 +252,10 @@ end
 
 ```
 
-The `image` field has been created with the `carrierwave` gem and that is the code needed in the testing environment. The file `image_2.jpg` must exist in the `spec/support/images/` directory. I did not know what was best practice between having one file called `spec/factories.rb` or having a file `model_name.rb` in the `spec/factories` directory. My searches did not deliver any conclusive results. So I used trial and error. I first opted for one file, then a mix, and then multiple files in the directory, as the number of factories grew, one per model. This is in-line with Rails practice of always having small files. The actual test to validate the factory is written in file `spec/models/article_spec.rb`:
+The `image` field has been created with the `carrierwave` gem and that is the code needed in the testing environment. The file `image_2.jpg` must exist in the `spec/support/images/` directory.
+
+There should be one factory per model `model_name.rb` in the `spec/factories` directory.
+The actual test to validate the factory is written in file `spec/models/article_spec.rb`:
 
 ```ruby
 require 'rails_helper'
@@ -263,7 +269,9 @@ end
 
 ```
 
-The RSpec matcher `be_valid` verifies that our factory does indeed return a valid object. Given that I had already created my models, once the test was passing, I changed the code to see the test fail, making sure that specific parts of code were indeed being tested.
+The RSpec matcher `be_valid` verifies that our factory does indeed return a valid object. When the models exist prior to writting the test, it 
+is a good practive to make the test fail by changing the code, fix the code to have the test pass. This ensures that 
+specific parts of code are indeed being tested.
 
 # Data validations
 
@@ -276,7 +284,7 @@ class Article < ActiveRecord::Base
 ```
 
 
-The following lines, create a object in the test environment, and gives it an empty title, which is not allowed:
+The following lines, create an object in the test environment, and gives it an empty title, which is not allowed:
 
 ```ruby
 require 'rails_helper'
@@ -295,7 +303,9 @@ Notice in the `article_spec.rb` file there are two special methods: `create` and
 
 # Associations between models
 
-An interesting test that I discovered in this [post](http://liahhansen.com/2011/04/14/testing-model-associations-in-rspec.html "Testing associations in RSpec"), is testing the associations between models using RSpec. As a beginner, I always want to double check that I made the right associations. For this, I used the gem `shoulda` found in [github](https://github.com/thoughtbot/shoulda "shoulda gem"). Add the gem to the Gemfile:
+The following allows RSpec testing of the association of models. 
+The gem `shoulda` found in [github](https://github.com/thoughtbot/shoulda
+"shoulda gem") allows just that. First add it the `Gemfile`.
 
 ```ruby
 group :test do
@@ -304,7 +314,7 @@ end
 
 ```
 
-and run `bundle`. Then add to the `spec/models/article_spec.rb`, the following test:
+Run `bundle`. Then add to the `spec/models/article_spec.rb`, the following test:
 
 ```ruby
 require 'rails_helper'
