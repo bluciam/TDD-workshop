@@ -315,7 +315,7 @@ Notice in the `article_spec.rb` file there are two special methods: `create` and
 
 An interesting test that I discovered in this [post](http://liahhansen.com/2011/04/14/testing-model-associations-in-rspec.html "Testing associations in RSpec"), is testing the associations between models using RSpec. As a beginner, I always want to double check that I made the right associations. For this, I used the gem `shoulda` found in [github](https://github.com/thoughtbot/shoulda "shoulda gem"). Add the gem to the Gemfile:
 
-```Ruby
+```ruby
 group :test do
   gem 'shoulda-matchers'
 end
@@ -324,7 +324,7 @@ end
 
 and run `bundle`. Then add to the `spec/models/article_spec.rb`, the following test:
 
-```Ruby
+```ruby
 require 'rails_helper'
 
 describe Article do
