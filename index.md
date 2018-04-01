@@ -269,6 +269,7 @@ end
 
 The `image` field has been created with the `carrierwave` gem and that is the code needed in the testing environment. The file `image_2.jpg` must exist in the `spec/support/images/` directory. I did not know what was best practice between having one file called `spec/factories.rb` or having a file `model_name.rb` in the `spec/factories` directory. My searches did not deliver any conclusive results. So I used trial and error. I first opted for one file, then a mix, and then multiple files in the directory, as the number of factories grew, one per model. This is in-line with Rails practice of always having small files. The actual test to validate the factory is written in file `spec/models/article_spec.rb`:
 
+```Ruby
 require 'rails_helper'
 
 describe Article do
@@ -278,28 +279,35 @@ describe Article do
   end
 end
 
+```
+
 The RSpec matcher `be_valid` verifies that our factory does indeed return a valid object. Given that I had already created my models, once the test was passing, I changed the code to see the test fail, making sure that specific parts of code were indeed being tested.
 
 # Data validations
 
 These tests are straight-forward, validating any of the constraints needed in each field. The model of the article has the constraint that the title is mandatory, as shown below:
 
-\# app/models/article.rb
+```Ruby
+# app/models/article.rb
 class Article < ActiveRecord::Base
   validates :title, presence: true
-...
+```
+
 
 The following lines, create a object in the test environment, and gives it an empty title, which is not allowed:
 
+```Ruby
 require 'rails_helper'
 
 describe Article do
-...
+
   it "is invalid without a title" do
     expect(FactoryGirl.build(:article, title: nil)).not\_to be\_valid
   end
-...
+
 end
+
+```
 
 Notice in the `article_spec.rb` file there are two special methods: `create` and `build`. `create` builds and saves the object, while `build` only does that. This allows the modification of attributes before saving the object. The `not_to` verifies that an empty title should not be allowed in a valid object.
 
@@ -307,18 +315,22 @@ Notice in the `article_spec.rb` file there are two special methods: `create` and
 
 An interesting test that I discovered in this [post](http://liahhansen.com/2011/04/14/testing-model-associations-in-rspec.html "Testing associations in RSpec"), is testing the associations between models using RSpec. As a beginner, I always want to double check that I made the right associations. For this, I used the gem `shoulda` found in [github](https://github.com/thoughtbot/shoulda "shoulda gem"). Add the gem to the Gemfile:
 
+```Ruby
 group :test do
-...
   gem 'shoulda-matchers'
 end
 
+```
+
 and run `bundle`. Then add to the `spec/models/article_spec.rb`, the following test:
 
+```Ruby
 require 'rails_helper'
 
 describe Article do
-...
 
   # Associations test
   it { should belong_to(:author) }
 end
+```
+
