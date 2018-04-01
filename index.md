@@ -84,7 +84,9 @@ spec/spec_helper.rb
 spec/rails_helper.rb
 ```
 
-All tests and helpers will reside in the `spec directory`. This is directory where `RSpec` searches for the tests to run. NOTE: After making changes to any of the models in development, you have to migrate the changes to the test database as well by running
+All tests and helpers will reside in the `spec directory`. This is directory where `RSpec` searches for the tests to run.
+
+NOTE: After making changes to any of the models in development, you have to migrate the changes to the test database as well by running
 
 ```bash
 rake db:migrate RAILS_ENV=test
@@ -97,6 +99,7 @@ With this, the testing infrastructure is set up.
 [RSpec](http://www.rubydoc.info/github/rspec/rspec-core/frames) uses mainly the words "describe" and "it" so we can express concepts like a conversation:
 
 > "Describe an order."
+
 > "It sums the prices of its line items."
 
 The `describe` method creates an `ExampleGroup`. Within the block passed to `describe` you can declare examples using the `it` method. Under the hood, an example group is a class in which the block passed to `describe` is evaluated. The broad syntax of the test is as follows:
@@ -120,14 +123,13 @@ Now to writing the tests. But where to start? With how to run a test. To run a t
 rspec
 ```
 
-from the root directory of the app. If used alone, it will run all the tests found in the `spec` directory. You can also specify a directory or a filename including its path with respect to root. RSpec will run all tests found in that directory in the first case, or just the file specified in the second. The testing framework automatically creates directories to sort out the tests. My `spec` directory looks like this:
+from the root directory of the app. If used alone, it will run all the tests found in the `spec` directory. You can also specify a directory or a filename including its path with respect to root. RSpec will run all tests found in that directory in the first case, or just the file specified in the second. The testing framework automatically creates directories to sort out the tests. An example `spec` directory of an app looks like this:
 
 ```
 controllers/  factories/       models/         requests/       support/
 helpers/      rails_helper.rb  spec_helper.rb  views/
 ```
 
-Next is what to test: unit testing, integrations testing, feature testing, regression testing.
 
 ## Unit testing: Models
 
@@ -140,7 +142,7 @@ The blog [Everyday Rails](http://everydayrails.com/2012/03/19/testing-series-rsp
 *   class and instance method
 
 
-We can consider three types of test relevant for this workshop:
+Our adaptation for this workshop are:
 
 *   Factory tests
 *   Data fields validations
