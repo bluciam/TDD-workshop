@@ -6,7 +6,7 @@ We will start with an already existing application just to get started and learn
 
 # Install rvm
 
-```
+```bash
 \curl -sSL https://get.rvm.io | bash -s stable
 ```
 
@@ -14,7 +14,7 @@ We will start with an already existing application just to get started and learn
 
 # Clone one of the repos at:
 
-```
+```bash
 git clone -b tdd-workshop https://github.com/bluciam/railsbridge-montreal-website.git
 cd railsbridge-montreal-website
 bundle install
@@ -38,17 +38,17 @@ The `regression tests` on bugs are also very important, and specially having tes
 
 ## Set up
 
-When a new Rails project is created with default settings, a `test` directory is created, coupled to work with `minitest`. 
+When a new Rails project is created with default settings, a `test` directory is created, coupled to work with `minitest`.
 In this workshop we will be using RSpec, `RSpec` ([http://rspec.info/](http://rspec.info/ "RSpec home page"),
 so we are changing the default as follows:
 
-```
+```bash
 rails g controller StaticPages about --no-test-framework
 ```
 
 The test files related to the `StaticPages controller` will not be created. To create the right files, RSpec must be installed. That is done by including its gem in the Gemfile. `RSpec` takes advantage of a series of helpers to run tests automatically. The gems are specified following:
 
-```
+```ruby
 group :development, :test do
   gem 'rspec-rails'
   gem 'factory\_bot\_rails'
@@ -69,13 +69,13 @@ And then run bundle. One of the most interesting about Rails testing, is the int
 
 That fact is simply brilliant, as the development database is NOT the same as the test database. One can create automatically hundreds of records to test for specific features in isolation. To run any testing, the databases need to be created, so run
 
-```
+```bash
 rake db:create:all
 ```
 
 which will create the databases which do not exist and inform you of the ones already created. The information on the databases description is taken from the file `config/database.yml`, which should include the information about test, development and production databases. Make sure that the three are name differently! Then run
 
-```
+```bash
 rails generate rspec:install
 ```
 
@@ -89,7 +89,7 @@ spec/rails_helper.rb
 
 All tests and helpers will reside in the `spec directory`. This is directory where `RSpec` searches for the tests to run. NOTE: After making changes to any of the models in development, you have to migrate the changes to the test database as well by running
 
-```
+```bash
 rake db:migrate RAILS_ENV=test
 ```
 
@@ -104,7 +104,7 @@ With this, the testing infrastructure is set up.
 
 The `describe` method creates an `ExampleGroup`. Within the block passed to `describe` you can declare examples using the `it` method. Under the hood, an example group is a class in which the block passed to `describe` is evaluated. The broad syntax of the test is as follows:
 
-```
+```ruby
 describe _Object_ do
   it "Descriptive message of the test" do
     _code with expectations_
@@ -119,7 +119,7 @@ Each `it` line only expects one example. Best practice is to test one thing at a
 
 Now to writing the tests. But where to start? With how to run a test. To run a test, use the command
 
-```
+```bash
 rspec
 ```
 
@@ -160,13 +160,13 @@ If the table exists, we need tools to find the table structure in the developmen
 
 The first is using the console
 
-```
+```bash
 rails c # short for rails console
 ```
 
 The command
 
-```
+```bash
 $ rails c
 Loading development environment (Rails 4.0.4)
 2.0.0-p451 :001 > ActiveRecord::Base.connection.tables
@@ -175,20 +175,20 @@ Loading development environment (Rails 4.0.4)
 
 will output an array including all of the current tables. And the command `User.column_names`
 
-```
+```bash
 2.0.0-p451 :008 > User.column_names
  =\> \["id", "name", "email", ...\]
 ```
 
 will output an array including the column names of the table User. The second way of accessing this information is by using the command
 
-```
+```bash
 rails db # short for rails dbconsole
 ```
 
 It starts a console for the database and database adapter specified in `config/database.yml` depending on the current Rails environment. If testing, one is most likely in the development environment.
 
-```
+```bash
 $ rails db
 Password:
 psql (9.4.1, server 9.3.5)
@@ -200,13 +200,13 @@ App\_Name\_development=#
 
 To retrieve the fields of the _articles_ table, I used the following command:
 
-```
+```bash
 =# select column\_name from information\_schema.columns where table_name='articles';
 ```
 
 The output is:
 
-```
+```bash
  column_name
 \-\-\-\-\-\-\-\-\-\-\-\-\-
  id
@@ -221,11 +221,13 @@ The output is:
 
 The command
 
-App\_Name\_developemnt=# \\d
+```
+App_Name_developemnt=# \d
+```
 
 will display a list of all the relations. With this information and with the information in the `model.rb` file, the factory can be written for the model. I used the `faker` gem to create random names and descriptions ([https://github.com/stympy/faker](https://github.com/stympy/faker "The Faker gem, github")). Given that _authors_ write _articles_, I also have a factory for articles. The factories look like this:
 
-```Ruby
+```ruby
 # spec/factories.rb
 require 'faker'
 
@@ -249,7 +251,7 @@ end
 
 The `image` field has been created with the `carrierwave` gem and that is the code needed in the testing environment. The file `image_2.jpg` must exist in the `spec/support/images/` directory. I did not know what was best practice between having one file called `spec/factories.rb` or having a file `model_name.rb` in the `spec/factories` directory. My searches did not deliver any conclusive results. So I used trial and error. I first opted for one file, then a mix, and then multiple files in the directory, as the number of factories grew, one per model. This is in-line with Rails practice of always having small files. The actual test to validate the factory is written in file `spec/models/article_spec.rb`:
 
-```Ruby
+```ruby
 require 'rails_helper'
 
 describe Article do
@@ -267,7 +269,7 @@ The RSpec matcher `be_valid` verifies that our factory does indeed return a vali
 
 These tests are straight-forward, validating any of the constraints needed in each field. The model of the article has the constraint that the title is mandatory, as shown below:
 
-```Ruby
+```ruby
 # app/models/article.rb
 class Article < ActiveRecord::Base
   validates :title, presence: true
@@ -276,7 +278,7 @@ class Article < ActiveRecord::Base
 
 The following lines, create a object in the test environment, and gives it an empty title, which is not allowed:
 
-```Ruby
+```ruby
 require 'rails_helper'
 
 describe Article do
@@ -295,7 +297,7 @@ Notice in the `article_spec.rb` file there are two special methods: `create` and
 
 An interesting test that I discovered in this [post](http://liahhansen.com/2011/04/14/testing-model-associations-in-rspec.html "Testing associations in RSpec"), is testing the associations between models using RSpec. As a beginner, I always want to double check that I made the right associations. For this, I used the gem `shoulda` found in [github](https://github.com/thoughtbot/shoulda "shoulda gem"). Add the gem to the Gemfile:
 
-```Ruby
+```ruby
 group :test do
   gem 'shoulda-matchers'
 end
@@ -304,7 +306,7 @@ end
 
 and run `bundle`. Then add to the `spec/models/article_spec.rb`, the following test:
 
-```Ruby
+```ruby
 require 'rails_helper'
 
 describe Article do
