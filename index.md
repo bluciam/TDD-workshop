@@ -253,8 +253,11 @@ end
 
 The `image` field has been created with the `carrierwave` gem and that is the code needed in the testing environment. The file `image_2.jpg` must exist in the `spec/support/images/` directory.
 
-There should be one factory per model `model_name.rb` in the `spec/factories` directory.
-The actual test to validate the factory is written in file `spec/models/article_spec.rb`:
+In the previous example, there is only one file including all the factoires.
+However, this works when there are only a couple of models but for best
+practices, there should be one factory per model `model_name.rb` in the `spec/factories` directory.
+
+The test to validate the factory is written in file `spec/models/article_spec.rb`:
 
 ```ruby
 require 'rails_helper'
