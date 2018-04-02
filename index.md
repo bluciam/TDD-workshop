@@ -131,9 +131,11 @@ helpers/      rails_helper.rb  spec_helper.rb  views/
 ```
 
 
-## Unit testing: Models
+# Unit testing: Models
 
-> Models are the building blocks of the application. They are also easier to test since their behaviour should be well defined in any application. I considered them to be first priority to test. [Everyday Rails](http://everydayrails.com/2012/03/19/testing-series-rspec-models-factory-girl.html "Blog Everyday Rails")
+> Models are the building blocks of the application. They are also easier to test since their behaviour should be
+well defined in any application. They could be considered as the priority to test.
+[Everyday Rails](http://everydayrails.com/2012/03/19/testing-series-rspec-models-factory-girl.html "Blog Everyday Rails")
 
 The blog [Everyday Rails](http://everydayrails.com/2012/03/19/testing-series-rspec-models-factory-girl.html "Blog Everyday Rails") considers the following to be essential model tests:
 
@@ -148,14 +150,20 @@ Our adaptation for this workshop are:
 *   Data fields validations
 *   Associations between models
 
-# Factory test
+## Factory test
 
 The first test is to make sure that a valid record can be created safely and respecting all of the constraints. In other words, that is has a valid _factory_.
 
-> A factory is an object for creating other objects – formally a factory is simply an object that returns an object from some method call, which is assumed to be "new". [https://en.wikipedia.org/wiki/Factory_%28object-oriented\_programming%29#cite\_ref-1](https://en.wikipedia.org/wiki/Factory_%28object-oriented_programming%29#cite_ref-1 "Factory definition, wikipedia")
+> A factory is an object for creating other objects – formally a factory is
+simply an object that returns an object from some method call, which is assumed
+to be "new".
+[https://en.wikipedia.org/wiki/Factory_(object-oriented\_programming)#cite\_ref-1](https://en.wikipedia.org/wiki/Factory_(object-oriented_programming)#cite_ref-1
+"Factory definition, wikipedia")
 
-This is probably not technically TTD, rather, it follows the database design. Therefore, the table might exist already.
-If the table exists, we need tools to find the table structure in the development database. There are two easy ways that I know of using the rails command.
+This is probably not technically TTD, rather, it follows the database design.
+Therefore, the table might exist already.  If the table exists, we need tools
+to find the table structure in the development database. There are two easy
+ways that I know of using the rails command.
 
 The first is using the console
 
@@ -172,20 +180,24 @@ Loading development environment (Rails 4.0.4)
  => ["schema_migrations", "users", ...]
 ```
 
-will output an array including all of the current tables. And the command `User.column_names`
+will output an array including all of the current tables. And the command
+`User.column_names`
 
 ```bash
 2.0.0-p451 :008 > User.column_names
  =\> \["id", "name", "email", ...\]
 ```
 
-will output an array including the column names of the table User. The second way of accessing this information is by using the command
+will output an array including the column names of the table User. The second
+way of accessing this information is by using the command
 
 ```bash
 rails db # short for rails dbconsole
 ```
 
-It starts a console for the database and database adapter specified in `config/database.yml` depending on the current Rails environment. If testing, one is most likely in the development environment.
+It starts a console for the database and database adapter specified in
+`config/database.yml` depending on the current Rails environment. If testing,
+one is most likely in the development environment.
 
 ```bash
 $ rails db
@@ -193,7 +205,7 @@ Password:
 psql (9.4.1, server 9.3.5)
 Type "help" for help.
 
-App\_Name\_development=#
+App_Name_development=#
 
 ```
 
@@ -207,7 +219,7 @@ The output is:
 
 ```bash
  column_name
-\-\-\-\-\-\-\-\-\-\-\-\-\-
+------------
  id
  name
  bio
@@ -224,7 +236,12 @@ The command
 App_Name_developemnt=# \d
 ```
 
-will display a list of all the relations. With this information and with the information in the `model.rb` file, the factory can be written for the model. The `faker` gem creates random names and descriptions ([https://github.com/stympy/faker](https://github.com/stympy/faker "The Faker gem, github")). Given that _authors_ write _articles_, a factory for articles is also included.
+will display a list of all the relations. With this information and with the
+information in the `model.rb` file, the factory can be written for the model.
+The `faker` gem creates random names and descriptions
+([https://github.com/stympy/faker](https://github.com/stympy/faker "The Faker
+gem, github")). Given that _authors_ write _articles_, a factory for articles
+is also included.
 
 
 The factories look like this:
@@ -251,11 +268,14 @@ end
 
 ```
 
-The `image` field has been created with the `carrierwave` gem and that is the code needed in the testing environment. The file `image_2.jpg` must exist in the `spec/support/images/` directory.
+The `image` field has been created with the `carrierwave` gem and that is the
+code needed in the testing environment. The file `image_2.jpg` must exist in
+the `spec/support/images/` directory.
 
-In the previous example, there is only one file including all the factoires.
+In the previous example, there is only one file including all the factories.
 However, this works when there are only a couple of models but for best
-practices, there should be one factory per model `model_name.rb` in the `spec/factories` directory.
+practices, there should be one factory per model: `model_name.rb` in the
+`spec/factories` directory.
 
 The test to validate the factory is written in file `spec/models/article_spec.rb`:
 
@@ -271,13 +291,16 @@ end
 
 ```
 
-The RSpec matcher `be_valid` verifies that our factory does indeed return a valid object. When the models exist prior to writting the test, it 
-is a good practive to make the test fail by changing the code, fix the code to have the test pass. This ensures that 
-specific parts of code are indeed being tested.
+The RSpec matcher `be_valid` verifies that our factory does indeed return a
+valid object. When the models exist prior to writting the test, it is a good
+practive to make the test fail by changing the code, fix the code to have the
+test pass. This ensures that specific parts of code are indeed being tested.
 
-# Data validations
+## Data validations
 
-These tests are straight-forward, validating any of the constraints needed in each field. The model of the article has the constraint that the title is mandatory, as shown below:
+These tests are straight-forward, validating any of the constraints needed in
+each field. The model of the article has the constraint that the title is
+mandatory, as shown below:
 
 ```ruby
 # app/models/article.rb
@@ -303,7 +326,7 @@ end
 
 Notice in the `article_spec.rb` file there are two special methods: `create` and `build`. `create` builds and saves the object, while `build` only does that. This allows the modification of attributes before saving the object. The `not_to` verifies that an empty title should not be allowed in a valid object.
 
-# Associations between models
+## Associations between models
 
 The following allows RSpec testing of the association of models. 
 The gem `shoulda` found in [github](https://github.com/thoughtbot/shoulda
@@ -327,4 +350,29 @@ describe Article do
   it { should belong_to(:author) }
 end
 ```
+
+# Controllers testing
+
+(Shameles based on [Relish docs](https://relishapp.com/rspec/rspec-rails/docs/controller-specs))
+
+Controller specs are marked by `:type => :controller` or if you have set
+`config.infer_spec_type_from_file_location!` by placing them in `spec/controllers`.
+
+A controller spec is an RSpec wrapper for a Rails functional test
+(ActionController::TestCase::Behavior).
+It allows you to simulate a single http request in each example, and then
+specify expected outcomes such as:
+
+* rendered templates
+* redirects
+* instance variables assigned in the controller to be shared with the view
+* cookies sent back with the response
+
+To specify outcomes, you can use:
+
+* standard rspec matchers `(expect(response.status).to eq(200))`
+* standard test/unit assertions (`assert_equal 200, response.status)`
+* rails assertions `(assert_response 200)`
+* rails-specific matchers such `redirect_to`, `render_template`.
+
 
