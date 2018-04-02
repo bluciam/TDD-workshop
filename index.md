@@ -315,7 +315,11 @@ specify expected outcomes such as:
 
 * rendered templates
 * redirects
-* instance variables assigned in the controller to be shared with the view
+* flash messages
+* changes in the database
+* strong params
+* authentication and authorization
+* instance variables assigned in the controller to be shared with the view (removed in Rails 5)
 * cookies sent back with the response
 
 To specify outcomes, you can use:
