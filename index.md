@@ -190,65 +190,24 @@ rails c # short for rails console
 The command
 
 ```bash
-$ rails c
-Loading development environment (Rails 4.0.4)
-2.0.0-p451 :001 > ActiveRecord::Base.connection.tables
- =\> \["schema_migrations", "users", ...\]
+rails c
+Loading development environment (Rails 5.1.6)
+irb(main):001:0> ActiveRecord::Base.connection.tables
+=> ["checks", "children", "courses", "editions", "messages", "registrants", "schema_migrations", "ar_internal_metadata"]
 ```
 
-will output an array including all of the current tables. And the command `User.column_names`
+will output an array including all of the current tables. And the command `Registrant.column_names`
 
 ```bash
-2.0.0-p451 :008 > User.column_names
- =\> \["id", "name", "email", ...\]
+irb(main):002:0> Registrant.column_names
+=> ["id", "name", "email", "created_at", "updated_at", "bringing_laptop", "special_needs", "level", "language", "cancelled_at", "waitlisted", "course_id", "edition_id"]
 ```
 
-will output an array including the column names of the table User. The second way of accessing this information is by using the command
-
-```bash
-rails db # short for rails dbconsole
-```
-
-It starts a console for the database and database adapter specified in `config/database.yml` depending on the current Rails environment. If testing, one is most likely in the development environment.
-
-```bash
-$ rails db
-Password:
-psql (9.4.1, server 9.3.5)
-Type "help" for help.
-
-App\_Name\_development=#
+will output an array including the column names of the table `Registrant`
 
 ```
 
-To retrieve the fields of the _articles_ table, I used the following command:
-
-```bash
-=# select column\_name from information\_schema.columns where table_name='articles';
-```
-
-The output is:
-
-```bash
- column_name
-\-\-\-\-\-\-\-\-\-\-\-\-\-
- id
- name
- bio
- image
- created_at
- updated_at
-(6 rows)
-
-```
-
-The command
-
-```
-App_Name_developemnt=# \d
-```
-
-will display a list of all the relations. With this information and with the information in the `model.rb` file, the factory can be written for the model. I used the `faker` gem to create random names and descriptions ([https://github.com/stympy/faker](https://github.com/stympy/faker "The Faker gem, github")). Given that _authors_ write _articles_, I also have a factory for articles. The factories look like this:
+With this information and with the information in the `model.rb` file, the factory can be written for the model. I used the `faker` gem to create random names and descriptions ([https://github.com/stympy/faker](https://github.com/stympy/faker "The Faker gem, github")). Given that _authors_ write _articles_, I also have a factory for articles. The factories look like this:
 
 ```ruby
 # spec/factories.rb
@@ -307,7 +266,7 @@ require 'rails_helper'
 describe Article do
 
   it "is invalid without a title" do
-    expect(FactoryGirl.build(:article, title: nil)).not\_to be\_valid
+    expect(FactoryGirl.build(:article, title: nil)).not_to be_valid
   end
 
 end
@@ -335,7 +294,7 @@ require 'rails_helper'
 describe Article do
 
   # Associations test
-  it { should belong_to(:author) }
+  it { is_expected.to belong_to(:author) }
 end
 ```
 
