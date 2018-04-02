@@ -328,7 +328,7 @@ Notice in the `article_spec.rb` file there are two special methods: `create` and
 
 ## Associations between models
 
-The following allows RSpec testing of the association of models. 
+The following allows RSpec testing of the association of models.
 The gem `shoulda` found in [github](https://github.com/thoughtbot/shoulda
 "shoulda gem") allows just that. First add it the `Gemfile`.
 
@@ -353,13 +353,15 @@ end
 
 # Controllers testing
 
-(Shameles based on [Relish docs](https://relishapp.com/rspec/rspec-rails/docs/controller-specs))
+(Shameless based on [Relish docs](https://relishapp.com/rspec/rspec-rails/docs/controller-specs).)
 
 Controller specs are marked by `:type => :controller` or if you have set
 `config.infer_spec_type_from_file_location!` by placing them in `spec/controllers`.
+Regardless of the configuration, it is good practice to place these tests in
+that directory.
 
 A controller spec is an RSpec wrapper for a Rails functional test
-(ActionController::TestCase::Behavior).
+(`ActionController::TestCase::Behavior`).
 It allows you to simulate a single http request in each example, and then
 specify expected outcomes such as:
 
