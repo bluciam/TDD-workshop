@@ -294,6 +294,7 @@ describe Article do
   # Associations test
   it { is_expected.to belong_to(:author) }
 end
+
 ```
 
 # Testing Controllers
@@ -346,6 +347,7 @@ rails g scaffold article
       create      spec/views/articles/show.html.erb_spec.rb
       create      spec/routing/articles_routing_spec.rb
       [...]
+      
 ```
 
 ```ruby
@@ -467,6 +469,7 @@ RSpec.describe ArticlesController, type: :controller do
   end
 
 end
+
 ```
 
 This is a structure Rails developers recognise easily. Those tests will not pass though because we need params to pass in the `let` calls. It can easily be done with FactoryBot using the `attributes_for` method. It will return a hash containing the attributes a factory can define.
