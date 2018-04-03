@@ -131,7 +131,7 @@ helpers/      rails_helper.rb  spec_helper.rb  views/
 ```
 
 
-# Unit testing: Models
+# Testing Models
 
 > Models are the building blocks of the application. They are also easier to test since their behaviour should be
 well defined in any application. They could be considered as the priority to test.
@@ -174,7 +174,6 @@ rails c # short for rails console
 The command
 
 ```bash
-<<<<<<< HEAD
 rails c
 Loading development environment (Rails 5.1.6)
 irb(main):001:0> ActiveRecord::Base.connection.tables
@@ -188,9 +187,7 @@ irb(main):002:0> Registrant.column_names
 => ["id", "name", "email", "created_at", "updated_at", "bringing_laptop", "special_needs", "level", "language", "cancelled_at", "waitlisted", "course_id", "edition_id"]
 ```
 
-will output an array including the column names of the table `Registrant`
-
-```
+will output an array including the column names of the table `Registrant`.
 
 With this information and with the information in the `model.rb` file, the factory can be written for the model. I used the `faker` gem to create random names and descriptions ([https://github.com/stympy/faker](https://github.com/stympy/faker "The Faker gem, github")). Given that _authors_ write _articles_, I also have a factory for articles. The factories look like this:
 
@@ -198,7 +195,7 @@ With this information and with the information in the `model.rb` file, the facto
 # spec/factories.rb
 require 'faker'
 
-FactoryGirl.define do
+FactoryBot.define do
 
   factory :author do
     name Faker::Name.name
@@ -265,7 +262,7 @@ require 'rails_helper'
 describe Article do
 
   it "is invalid without a title" do
-    expect(FactoryGirl.build(:article, title: nil)).not_to be_valid
+    expect(FactoryBot.build(:article, title: nil)).not_to be_valid
   end
 
 end
@@ -299,9 +296,9 @@ describe Article do
 end
 ```
 
-# Controllers testing
+# Testing Controllers
 
-(Shameless based on [Relish docs](https://relishapp.com/rspec/rspec-rails/docs/controller-specs).)
+(Shamelessly based on [Relish docs](https://relishapp.com/rspec/rspec-rails/docs/controller-specs).)
 
 Controller specs are marked by `:type => :controller` or if you have set
 `config.infer_spec_type_from_file_location!` by placing them in `spec/controllers`.
